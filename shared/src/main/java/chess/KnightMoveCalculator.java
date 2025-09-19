@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class KnightMoveCalculator extends ChessMoveCalculator{
-    private List<ChessMove> possibleMoves;
+    private final List<ChessMove> possibleMoves;
     public KnightMoveCalculator() {
         possibleMoves = new ArrayList<>();
     }
@@ -41,9 +41,6 @@ public class KnightMoveCalculator extends ChessMoveCalculator{
         addToList(startPosition,downR,board,color);
         addToList(startPosition,rightU,board,color);
         addToList(startPosition,rightD,board,color);
-
-
-
         return possibleMoves;
     }
 }

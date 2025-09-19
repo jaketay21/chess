@@ -56,7 +56,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return this.calculator.CalculateMove(null, myPosition);
+        return this.calculator.CalculateMove(board, pieceColor, null, myPosition);
     }
 
     @Override

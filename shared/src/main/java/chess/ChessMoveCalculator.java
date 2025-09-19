@@ -8,7 +8,7 @@ public class ChessMoveCalculator {
     public ChessMoveCalculator() {
     }
 
-   public Collection<ChessMove> CalculateMove (ChessPiece.PieceType promotionType, ChessPosition startPosition){
+   public Collection<ChessMove> CalculateMove (ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition){
        return null;
    }
 

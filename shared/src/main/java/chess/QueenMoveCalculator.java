@@ -14,6 +14,7 @@ public class QueenMoveCalculator extends ChessMoveCalculator{
     private boolean unblockedDL = true;
     private boolean unblockedDR = true;
     private boolean unblockedD = true;
+
     public QueenMoveCalculator () {
         possibleMoves = new ArrayList<>();
     }

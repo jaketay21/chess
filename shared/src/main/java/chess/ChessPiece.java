@@ -19,8 +19,33 @@ public class ChessPiece {
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
-        this.calculator = new BishopMoveCalculator();
+
+        switch(this.type) {
+            case BISHOP:
+                this.calculator = new BishopMoveCalculator();
+                break;
+            case KING:
+                this.calculator = new KingMoveCalculator();
+                break;
+            case PAWN:
+                this.calculator = new PawnMoveCalculator();
+                break;
+            case ROOK:
+                this.calculator = new RookMoveCalculator();
+                break;
+            case QUEEN:
+                this.calculator = new QueenMoveCalculator();
+                break;
+            case KNIGHT:
+                this.calculator = new KnightMoveCalculator();
+                break;
+            case null, default:
+                this.calculator = null;
+                break;
+        }
     }
+
+
 
     /**
      * The various different chess piece options

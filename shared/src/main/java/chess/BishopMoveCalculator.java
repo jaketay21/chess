@@ -5,21 +5,14 @@ import java.util.*;
 public class BishopMoveCalculator extends ChessMoveCalculator {
     public BishopMoveCalculator() {}
     // checks if position in within bounds
-    private boolean positionValid(ChessPosition position){
-        return position.getColumn() >= 1 && position.getColumn() <= 8 && position.getRow() >= 1 && position.getRow() <= 8;
-    }
 
-    private boolean empty(ChessBoard board, ChessPosition position){
-        if(board.getPiece(position) != null) return false;
-        return true;
-    }
-
+   /*
     private void addToList(ChessPosition pos, List<ChessMove> posMoves, ChessPosition start){
         if (positionValid(pos)){
             posMoves.add(new ChessMove(start, pos, null));
         }
     }
-
+    */
     // this function should calculate all possible moves and return an array of chessmoves
     @Override
     public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition) {

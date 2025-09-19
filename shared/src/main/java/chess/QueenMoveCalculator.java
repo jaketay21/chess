@@ -6,6 +6,14 @@ import java.util.List;
 
 public class QueenMoveCalculator extends ChessMoveCalculator{
     private List<ChessMove> possibleMoves;
+    private boolean unblockedU = true;
+    private boolean unblockedUL = true;
+    private boolean unblockedUR = true;
+    private boolean unblockedL = true;
+    private boolean unblockedR = true;
+    private boolean unblockedDL = true;
+    private boolean unblockedDR = true;
+    private boolean unblockedD = true;
     public QueenMoveCalculator () {
         possibleMoves = new ArrayList<>();
     }
@@ -25,14 +33,7 @@ public class QueenMoveCalculator extends ChessMoveCalculator{
         }
         return false;
     }
-    boolean unblockedU = true;
-    boolean unblockedUL = true;
-    boolean unblockedUR = true;
-    boolean unblockedL = true;
-    boolean unblockedR = true;
-    boolean unblockedDL = true;
-    boolean unblockedDR = true;
-    boolean unblockedD = true;
+
 
 
 

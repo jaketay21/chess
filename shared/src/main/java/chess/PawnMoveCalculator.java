@@ -15,24 +15,52 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
 
     private boolean addToList(ChessPosition start, ChessPosition next, ChessBoard board, ChessGame.TeamColor color){
         if(positionValid(next)){
-            if(!empty(board,next)){
-                return false;
+            if(next.getRow() != 1 && next.getRow() != 8 ) {
+                if (!empty(board, next)) {
+                    return false;
+                } else {
+                    possibleMoves.add(new ChessMove(start, next, null));
+                    return true;
+                }
             }else{
-                possibleMoves.add(new ChessMove(start, next, null));
-                return true;
+                if (!empty(board, next)) {
+                    return false;
+                } else {
+                    possibleMoves.add(new ChessMove(start, next, ChessPiece.PieceType.QUEEN));
+                    possibleMoves.add(new ChessMove(start, next, ChessPiece.PieceType.KNIGHT));
+                    possibleMoves.add(new ChessMove(start, next, ChessPiece.PieceType.ROOK));
+                    possibleMoves.add(new ChessMove(start, next, ChessPiece.PieceType.BISHOP));
+
+                    return true;
+                }
             }
+
         }
         return false;
     }
 
     public void attack(ChessPosition start, ChessPosition nxt, ChessBoard board, ChessGame.TeamColor color){
         if(positionValid(nxt)){
-            if(!empty(board, nxt)){
-                ChessPiece blocker = board.getPiece(nxt);
-                if(blocker.getTeamColor() != color){
-                    possibleMoves.add(new ChessMove(start,nxt,null));
+            if(nxt.getRow() != 1 && nxt.getRow() != 8) {
+                if (!empty(board, nxt)) {
+                    ChessPiece blocker = board.getPiece(nxt);
+                    if (blocker.getTeamColor() != color) {
+                        possibleMoves.add(new ChessMove(start, nxt, null));
+                    }
+                }
+            }else{
+                if (!empty(board, nxt)) {
+                    ChessPiece blocker = board.getPiece(nxt);
+                    if (blocker.getTeamColor() != color) {
+                        possibleMoves.add(new ChessMove(start, nxt,  ChessPiece.PieceType.QUEEN));
+                        possibleMoves.add(new ChessMove(start, nxt,  ChessPiece.PieceType.ROOK));
+                        possibleMoves.add(new ChessMove(start, nxt,  ChessPiece.PieceType.KNIGHT));
+                        possibleMoves.add(new ChessMove(start, nxt,  ChessPiece.PieceType.BISHOP));
+
+                    }
                 }
             }
+
         }
     }
 
@@ -70,21 +98,22 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
             ChessPosition attackR = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() + 1);
 
             if(startPosition.getRow() == 7){
-                for(int i = 1; i < 3; i ++){
+                for(int i = 1; i < 3; i++) {
                     ChessPosition Forward = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
-                    if(unblockedF){
-                        unblockedF = addToList(startPosition, Forward, board,color);
+                    if (unblockedF) {
+                        unblockedF = addToList(startPosition, Forward, board, color);
                     }
                 }
+
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
 
             }else if(startPosition.getRow() == 2){
                 ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-                unblockedF = addToList(startPosition, Forward, board,color);
+                unblockedF = addToList(startPosition, Forward, board, color);
+
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
-
 
             }else{
                 ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());

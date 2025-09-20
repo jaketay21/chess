@@ -9,7 +9,7 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessPosition implements Comparable<ChessPosition> {
+public class ChessPosition {
     private  int row;
     private  int col;
 
@@ -51,12 +51,6 @@ public class ChessPosition implements Comparable<ChessPosition> {
     /*
     this creates a comparison among chess positions
      */
-    @Override
-    public int compareTo(ChessPosition o) {
-        int rowCompare = Integer.compare(this.row, o.row);
-        if(rowCompare != 0) return rowCompare;
-        return Integer.compare(this.col, o.col);
-    }
 
     @Override
     public boolean equals(Object o) {

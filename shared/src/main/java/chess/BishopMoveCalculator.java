@@ -3,25 +3,35 @@ package chess;
 import java.util.*;
 
 public class BishopMoveCalculator extends ChessMoveCalculator {
-    public BishopMoveCalculator() {}
-    // checks if position in within bounds
+   private List<ChessMove> possibleMoves;
+    private  boolean unblockedUpR= true;
+    private  boolean unblockedUpL = true;
+    private  boolean unblockedDownL = true;
+    private  boolean unblockedDownR = true;
 
-   /*
-    private void addToList(ChessPosition pos, List<ChessMove> posMoves, ChessPosition start){
-        if (positionValid(pos)){
-            posMoves.add(new ChessMove(start, pos, null));
-        }
+    public BishopMoveCalculator() {
+        possibleMoves = new ArrayList<>();
     }
-    */
-    // this function should calculate all possible moves and return an array of chessmoves
+
+    public boolean addToList(ChessPosition start, ChessPosition nxt, ChessBoard board, ChessGame.TeamColor color){
+        if (positionValid(nxt)){
+            if(!empty(board,nxt)){
+                ChessPiece blocker = board.getPiece(nxt);
+                if(color != blocker.getTeamColor()){
+                    possibleMoves.add(new ChessMove(start, nxt, null));
+                }
+                return false;
+            }else {
+                possibleMoves.add(new ChessMove(start, nxt, null));
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition) {
-        List<ChessMove> possibleMoves = new ArrayList<>() ;
         //set booleans for each direction of possible movements as unblocked
-        boolean unblockedUpR= true;
-        boolean unblockedUpL = true;
-        boolean unblockedDownL = true;
-        boolean unblockedDownR = true;
+
         //cover whole board because bishop can move from one corner to the other
         for(int i = 1; i < 8; i++){
             /*
@@ -31,69 +41,28 @@ public class BishopMoveCalculator extends ChessMoveCalculator {
             if occupied update unblocked to false, stops calculating for that direction
             if unoccupied add position to list
              */
+            ChessPosition upLeft = new ChessPosition (startPosition.getRow() + i, startPosition.getColumn() - i);
+            ChessPosition upRight = new ChessPosition (startPosition.getRow() + i, startPosition.getColumn() + i);
+            ChessPosition downRight = new ChessPosition (startPosition.getRow() -i, startPosition.getColumn() + i);
+            ChessPosition downLeft = new ChessPosition (startPosition.getRow() - i, startPosition.getColumn() -i);
+
             if(unblockedUpL){
-                ChessPosition upLeft = new ChessPosition (startPosition.getRow() + i, startPosition.getColumn() - i);
-                if (positionValid(upLeft)){
-                    if(!empty(board,upLeft)){
-                    ChessPiece blocker = board.getPiece(upLeft);
-                    unblockedUpL = false;
-                        if(color != blocker.getTeamColor()){
-                            possibleMoves.add(new ChessMove(startPosition, upLeft, null));
-                        }
-                    }else {
-                        possibleMoves.add(new ChessMove(startPosition, upLeft, null));
-                    }
-                }
+                unblockedUpL = addToList(startPosition, upLeft, board, color);
             }
 
             if(unblockedUpR){
-                ChessPosition upRight = new ChessPosition (startPosition.getRow() + i, startPosition.getColumn() + i);
-                if (positionValid(upRight)) {
-                    if(!empty(board,upRight)){
-                        ChessPiece blocker = board.getPiece(upRight);
-                        unblockedUpR = false;
-                        if(color != blocker.getTeamColor()){
-                            possibleMoves.add(new ChessMove(startPosition, upRight, null));
-                        }
-                    }else {
-                        possibleMoves.add(new ChessMove(startPosition, upRight, null));
-                    }
-                }
+                unblockedUpR = addToList(startPosition, upRight, board, color);
             }
 
             if(unblockedDownR){
-                ChessPosition downRight = new ChessPosition (startPosition.getRow() -i, startPosition.getColumn() + i);
-                if(positionValid(downRight)){
-                    if(!empty(board,downRight)){
-                        ChessPiece blocker = board.getPiece(downRight);
-                        unblockedDownR = false;
-                        if(color != blocker.getTeamColor()){
-                            possibleMoves.add(new ChessMove(startPosition, downRight, null));
-                        }
-                    }else {
-                        possibleMoves.add(new ChessMove(startPosition, downRight, null));
-                    }
-                }
+                unblockedDownR = addToList(startPosition, downRight, board, color);
             }
 
             if(unblockedDownL){
-                ChessPosition downLeft = new ChessPosition (startPosition.getRow() - i, startPosition.getColumn() -i);
-                if(positionValid(downLeft)){
-                    if(!empty(board,downLeft)){
-                        ChessPiece blocker = board.getPiece(downLeft);
-                        unblockedDownL = false;
-                        if(color != blocker.getTeamColor()){
-                            possibleMoves.add(new ChessMove(startPosition, downLeft, null));
-                        }
-                    }else {
-                        possibleMoves.add(new ChessMove(startPosition, downLeft, null));
-                    }
-                }
+                unblockedDownL = addToList(startPosition, downLeft, board, color);
             }
 
         }
-
-
         return possibleMoves;
 
     }

@@ -30,7 +30,6 @@ public class BishopMoveCalculator extends ChessMoveCalculator {
     }
     @Override
     public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition) {
-        //set booleans for each direction of possible movements as unblocked
 
         //cover whole board because bishop can move from one corner to the other
         for(int i = 1; i < 8; i++){

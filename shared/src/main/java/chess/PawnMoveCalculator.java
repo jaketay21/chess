@@ -80,19 +80,15 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
 
-            }else if(startPosition.getRow() == 7){
-                ChessPosition Forward = new ChessPosition(startPosition.getRow()+ 1, startPosition.getColumn());
-                unblockedF = addToList(startPosition, Forward, board,color);
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
-
-
             }else{
                 ChessPosition Forward = new ChessPosition(startPosition.getRow()+ 1, startPosition.getColumn());
                 unblockedF = addToList(startPosition, Forward, board,color);
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
+
+
             }
+
         }else{
             ChessPosition attackL = new ChessPosition(startPosition.getRow() - 1,startPosition.getColumn() - 1);
             ChessPosition attackR = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() + 1);
@@ -108,16 +104,10 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
 
-            }else if(startPosition.getRow() == 2){
+            }else{
                 ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
                 unblockedF = addToList(startPosition, Forward, board, color);
 
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
-
-            }else{
-                ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-                unblockedF = addToList(startPosition, Forward, board,color);
                 attack(startPosition,attackR,board,color);
                 attack(startPosition,attackL,board,color);
 

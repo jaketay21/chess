@@ -78,16 +78,18 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         HashSet<ChessMove> opponentsMoves = new HashSet<>();
         HashSet<ChessPosition> endPoints = new HashSet<>();
-        for(int i = 1; i < 9; i++){
-            for(int j = 1; i < 9; i++){
+        for(int i = 1; i < 8; i++){
+            for(int j = 1; j < 8; j++){
                 ChessPosition current = new ChessPosition(i,j);
-                ChessPiece piece = squares.getPiece(current);
-                if(piece != null && piece.getTeamColor() != teamColor){
-                    for(ChessMove move: piece.pieceMoves(squares, current)){
-                        opponentsMoves.add(move);
+                if(!isEmpty(squares,current)){
+                    ChessPiece piece = squares.getPiece(current);
+                    if(piece.getTeamColor() != teamColor){
+                        for(ChessMove move: piece.pieceMoves(squares,current)){
+                            opponentsMoves.add(move);
+                        }
                     }
-                }
 
+                }
             }
         }
         for(ChessMove moves: opponentsMoves){
@@ -145,15 +147,21 @@ public class ChessGame {
         for(int i = 1; i < 9; i++){
             for(int j = 1; j < 9; j++){
                 ChessPosition current = new ChessPosition(i,j);
-                ChessPiece piece = getBoard().getPiece(current);
-                if(piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == color){
-                    return current;
+                if(!isEmpty(squares,current)){
+                    ChessPiece piece = getBoard().getPiece(current);
+                    if(piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == color){
+                        return current;
+                    }
                 }
+
             }
         }
         return null;
     }
-
+    public boolean isEmpty(ChessBoard board, ChessPosition pos){
+        if(board.getPiece(pos) == null) return true;
+        return false;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

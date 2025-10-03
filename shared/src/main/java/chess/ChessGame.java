@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -58,8 +55,7 @@ public class ChessGame {
         if(piece == null){
             return null;
         }
-
-
+        return piece.pieceMoves(squares,startPosition);
     }
 
     /**
@@ -80,17 +76,27 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        List<ChessPosition>
-        for(ChessPiece[] row: squares.GetSquares()){
-            for(ChessPiece piece: row) {
-                if(piece.getTeamColor() != teamColor){
-
+        HashSet<ChessMove> opponentsMoves = new HashSet<>();
+        HashSet<ChessPosition> endPoints = new HashSet<>();
+        for(int i = 1; i < 9; i++){
+            for(int j = 1; i < 9; i++){
+                ChessPosition current = new ChessPosition(i,j);
+                ChessPiece piece = squares.getPiece(current);
+                if(piece != null && piece.getTeamColor() != teamColor){
+                    for(ChessMove move: piece.pieceMoves(squares, current)){
+                        opponentsMoves.add(move);
+                    }
                 }
 
             }
         }
-
-                ;
+        for(ChessMove moves: opponentsMoves){
+            endPoints.add(moves.getEndPosition());
+        }
+        if(endPoints.contains(findKing(teamColor))){
+            return true;
+        }
+        return false;
     }
 
     /**

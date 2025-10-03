@@ -11,14 +11,28 @@ import java.util.Objects;
  */
 public class ChessBoard {
 
-    private ChessPiece[][] squares = new ChessPiece[8][8];
+    private ChessPiece[][] squares;
     public ChessBoard() {
-        
+        squares = new ChessPiece[8][8];
     }
 
-    public ChessPiece[][] GetSquares(){
+    public ChessBoard(ChessBoard board){
+        this.squares = new ChessPiece[8][8];
+        ChessPiece[][] original = board.getSquares();
+
+        for(int row = 0; row < 8; row++){
+            for(int col = 0; col < 8; col++){
+                ChessPiece piece = original[row][col];
+                this.squares[row][col] = piece;
+            }
+        }
+
+    }
+
+    public ChessPiece[][] getSquares(){
         return squares;
     }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -69,6 +83,13 @@ public class ChessBoard {
         squares[7][7] = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.ROOK);
 
 
+    }
+
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "squares=" + Arrays.toString(squares) +
+                '}';
     }
 
     @Override

@@ -51,11 +51,23 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece piece = squares.getPiece(startPosition);
-        if(piece == null){
-            return null;
+        if(isEmpty(squares, startPosition)){
+            return Collections.emptySet();
         }
-        return piece.pieceMoves(squares,startPosition);
+        ChessPiece piece = squares.getPiece(startPosition);
+        TeamColor opColor = (piece.getTeamColor() == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE;
+        if(piece.getPieceType() == ChessPiece.PieceType.KING){
+            HashSet<ChessMove> myMoves = transferMoves(piece.pieceMoves(squares,startPosition));
+            HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(squares,opColor);
+            for (ChessMove move: piece.pieceMoves(squares,startPosition)){
+                if(opEndPoints.contains(move.getEndPosition())){
+                    myMoves.remove(move);
+                }
+            }
+            return myMoves;
+        }
+        return Collections.emptySet();
+
     }
 
     /**
@@ -76,27 +88,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        HashSet<ChessMove> opponentsMoves = new HashSet<>();
-        HashSet<ChessPosition> endPoints = new HashSet<>();
-        for(int i = 1; i < 8; i++){
-            for(int j = 1; j < 8; j++){
-                ChessPosition current = new ChessPosition(i,j);
-                if(!isEmpty(squares,current)){
-                    ChessPiece piece = squares.getPiece(current);
-                    if(piece.getTeamColor() != teamColor){
-                        for(ChessMove move: piece.pieceMoves(squares,current)){
-                            opponentsMoves.add(move);
-                        }
-                    }
-
-                }
-            }
-        }
-        for(ChessMove moves: opponentsMoves){
-            endPoints.add(moves.getEndPosition());
-        }
-        if(endPoints.contains(findKing(teamColor))){
-            return true;
+        TeamColor opponentColor = (teamColor == TeamColor.WHITE) ? TeamColor.BLACK : TeamColor.WHITE;
+        HashSet<ChessPosition> oppenentMoves= (HashSet<ChessPosition>) getPossibleMoves(squares, opponentColor);;
+        if(oppenentMoves.contains(findKing(squares,teamColor))){
+                return true;
         }
         return false;
     }
@@ -119,7 +114,10 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor)){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -143,12 +141,12 @@ public class ChessGame {
     /**
     returns the current position of the king with desired color;
      */
-    public ChessPosition findKing(TeamColor color){
+    public ChessPosition findKing( ChessBoard board, TeamColor color){
         for(int i = 1; i < 9; i++){
             for(int j = 1; j < 9; j++){
                 ChessPosition current = new ChessPosition(i,j);
-                if(!isEmpty(squares,current)){
-                    ChessPiece piece = getBoard().getPiece(current);
+                if(!isEmpty(board,current)){
+                    ChessPiece piece = board.getPiece(current);
                     if(piece.getPieceType() == ChessPiece.PieceType.KING && piece.getTeamColor() == color){
                         return current;
                     }
@@ -158,10 +156,43 @@ public class ChessGame {
         }
         return null;
     }
+    //quick check to see if that square is empty
     public boolean isEmpty(ChessBoard board, ChessPosition pos){
         if(board.getPiece(pos) == null) return true;
         return false;
     }
+
+    public Collection<ChessPosition> getPossibleMoves( ChessBoard board, TeamColor teamColor){
+        HashSet<ChessMove> possiblemMoves = new HashSet<>();
+        HashSet<ChessPosition> endPositions = new HashSet<>();
+        for(int i = 1; i < 9; i++){
+            for(int j = 1; j < 9; j++){
+                ChessPosition current = new ChessPosition(i,j);
+                if(!isEmpty(board,current)){
+                    ChessPiece piece = board.getPiece(current);
+                    if(piece.getTeamColor() == teamColor){
+                        for(ChessMove move: piece.pieceMoves(board,current)){
+                            possiblemMoves.add(move);
+                        }
+                    }
+
+                }
+            }
+        }
+        for(ChessMove move: possiblemMoves){
+            endPositions.add(move.getEndPosition());
+        }
+
+        return endPositions;
+    }
+    public HashSet<ChessMove> transferMoves(Collection<ChessMove> pieceMoves){
+        HashSet<ChessMove> nextSet = new HashSet<>();
+        for(ChessMove move: pieceMoves){
+            nextSet.add(move);
+        }
+        return nextSet;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

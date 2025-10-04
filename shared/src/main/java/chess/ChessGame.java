@@ -67,7 +67,6 @@ public class ChessGame {
             return myMoves;
         }
         HashSet<ChessMove> illegalMoves = new HashSet<>();
-        System.out.println(squares.toString());
         for(ChessMove move: piece.pieceMoves(squares, startPosition)){
             ChessBoard simulate = new ChessBoard(squares);
             ChessPiece copy = new ChessPiece(piece.getTeamColor(),piece.getPieceType());
@@ -76,11 +75,6 @@ public class ChessGame {
             HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(simulate,opColor);
             if(opEndPoints.contains(findKing(simulate,piece.getTeamColor()))){
                 illegalMoves.add(move);
-            }
-
-            System.out.println(simulate.toString());
-            for(ChessMove illegal: illegalMoves){
-                System.out.println(illegal.toString());
             }
         }
         myMoves.removeAll(illegalMoves);
@@ -94,8 +88,37 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        TeamColor turn = getTeamTurn();
+        ChessPosition start = move.getStartPosition();
+        ChessPiece piece = squares.getPiece(start);
+        if(squares.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException();
+        }
+        if(piece.getTeamColor() != turn){
+            throw new InvalidMoveException();
+        }
+        if(validMoves(start).isEmpty() || !validMoves(start).contains(move)){
+            throw new InvalidMoveException();
+        }
 
+        if(piece.getPieceType() == ChessPiece.PieceType.PAWN){
+            if (turn == TeamColor.WHITE && start.getRow() == 7 ){
+                squares.addPiece(move.getEndPosition(), new ChessPiece(turn,move.getPromotionPiece()));
+            }else if (turn == TeamColor.BLACK && start.getRow() == 2 ){
+                squares.addPiece(move.getEndPosition(), new ChessPiece(turn,move.getPromotionPiece()));
+
+            }else{
+                squares.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(),piece.getPieceType()));
+            }
+        }else {
+            squares.addPiece(move.getEndPosition(), piece);
+        }
+        squares.addPiece(move.getStartPosition(), null);
+        if(turn == TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        }else{
+            setTeamTurn(TeamColor.WHITE);
+        }
     }
 
     /**
@@ -120,7 +143,15 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(isInCheck(teamColor)){
+            System.out.println(squares.toString());
+            if(getValidMoves(teamColor,squares).isEmpty()){
+                return true;
+            }
+        }
+        return false;
+
+
     }
 
     /**
@@ -134,7 +165,11 @@ public class ChessGame {
         if(isInCheck(teamColor)){
             return false;
         }
-        return true;
+        if(getValidMoves(teamColor,squares).isEmpty()){
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -202,6 +237,23 @@ public class ChessGame {
 
         return endPositions;
     }
+
+    public Collection<ChessMove> getValidMoves(TeamColor color, ChessBoard board){
+        HashSet<ChessMove> validMoveSet = new HashSet<>();
+        for (int i = 1; i < 9; i++){
+            for(int j = 1; j< 9; j++){
+                ChessPosition current = new ChessPosition(i,j);
+                if(!isEmpty(board, current)){
+                    ChessPiece piece = board.getPiece(current);
+                    if(piece.getTeamColor() == color){
+                        validMoveSet.addAll(validMoves(current));
+                    }
+                }
+            }
+        }
+        return validMoveSet;
+    }
+
     public HashSet<ChessMove> transferMoves(Collection<ChessMove> pieceMoves){
         HashSet<ChessMove> nextSet = new HashSet<>();
         for(ChessMove move: pieceMoves){

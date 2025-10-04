@@ -56,8 +56,8 @@ public class ChessGame {
         }
         ChessPiece piece = squares.getPiece(startPosition);
         TeamColor opColor = (piece.getTeamColor() == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE;
+        HashSet<ChessMove> myMoves = transferMoves(piece.pieceMoves(squares,startPosition));
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
-            HashSet<ChessMove> myMoves = transferMoves(piece.pieceMoves(squares,startPosition));
             HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(squares,opColor);
             for (ChessMove move: piece.pieceMoves(squares,startPosition)){
                 if(opEndPoints.contains(move.getEndPosition())){
@@ -66,8 +66,25 @@ public class ChessGame {
             }
             return myMoves;
         }
-        return Collections.emptySet();
+        HashSet<ChessMove> illegalMoves = new HashSet<>();
+        System.out.println(squares.toString());
+        for(ChessMove move: piece.pieceMoves(squares, startPosition)){
+            ChessBoard simulate = new ChessBoard(squares);
+            ChessPiece copy = new ChessPiece(piece.getTeamColor(),piece.getPieceType());
+            simulate.addPiece(move.getEndPosition(),copy);
+            simulate.addPiece(startPosition, null);
+            HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(simulate,opColor);
+            if(opEndPoints.contains(findKing(simulate,piece.getTeamColor()))){
+                illegalMoves.add(move);
+            }
 
+            System.out.println(simulate.toString());
+            for(ChessMove illegal: illegalMoves){
+                System.out.println(illegal.toString());
+            }
+        }
+        myMoves.removeAll(illegalMoves);
+        return myMoves;
     }
 
     /**

@@ -23,7 +23,9 @@ public class ChessBoard {
         for(int row = 0; row < 8; row++){
             for(int col = 0; col < 8; col++){
                 ChessPiece piece = original[row][col];
-                this.squares[row][col] = piece;
+                if (piece != null) {
+                    this.squares[row][col] = new ChessPiece(piece.getTeamColor(),piece.getPieceType());
+                }
             }
         }
 
@@ -87,9 +89,31 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        return "ChessBoard{" +
-                "squares=" + Arrays.toString(squares) +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece piece = squares[row][col];
+                if (piece == null) {
+                    sb.append(". ");  // empty square
+                } else {
+                    sb.append(getSymbol(piece)).append(" ");
+                }
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    private char getSymbol(ChessPiece piece) {
+        switch (piece.getPieceType()) {
+            case KING: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'K' : 'k';
+            case QUEEN: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'Q' : 'q';
+            case ROOK: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'R' : 'r';
+            case BISHOP: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'B' : 'b';
+            case KNIGHT: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'N' : 'n';
+            case PAWN: return piece.getTeamColor() == ChessGame.TeamColor.WHITE ? 'P' : 'p';
+            default: return '?';
+        }
     }
 
     @Override

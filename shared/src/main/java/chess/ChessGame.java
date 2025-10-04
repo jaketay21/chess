@@ -58,6 +58,10 @@ public class ChessGame {
         ChessPiece piece = squares.getPiece(startPosition);
         TeamColor opColor = (piece.getTeamColor() == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE;
         HashSet<ChessMove> myMoves = transferMoves(piece.pieceMoves(squares,startPosition));
+        System.out.println("Checking valid moves for: " + startPosition);
+        for (ChessMove move : myMoves) {
+            System.out.println("  Move: " + move);
+        }
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
             HashSet<ChessMove> illegalMoves = new HashSet<>();
             for (ChessMove move : myMoves) {
@@ -104,7 +108,8 @@ public class ChessGame {
         if(piece.getTeamColor() != turn){
             throw new InvalidMoveException();
         }
-        if(validMoves(start).isEmpty() || !validMoves(start).contains(move)){
+        Collection<ChessMove> moves = validMoves(start);
+        if (!moves.contains(move)) {
             throw new InvalidMoveException();
         }
 

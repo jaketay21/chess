@@ -1,5 +1,6 @@
 package chess;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.*;
 
 /**
@@ -58,12 +59,18 @@ public class ChessGame {
         TeamColor opColor = (piece.getTeamColor() == TeamColor.WHITE) ? TeamColor.BLACK: TeamColor.WHITE;
         HashSet<ChessMove> myMoves = transferMoves(piece.pieceMoves(squares,startPosition));
         if(piece.getPieceType() == ChessPiece.PieceType.KING){
-            HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(squares,opColor);
-            for (ChessMove move: piece.pieceMoves(squares,startPosition)){
-                if(opEndPoints.contains(move.getEndPosition())){
-                    myMoves.remove(move);
+            HashSet<ChessMove> illegalMoves = new HashSet<>();
+            for (ChessMove move : myMoves) {
+                ChessBoard simulate = new ChessBoard(squares);
+                ChessPiece copy = new ChessPiece(piece.getTeamColor(), piece.getPieceType());
+                simulate.addPiece(move.getEndPosition(), copy);
+                simulate.addPiece(startPosition, null);
+                HashSet<ChessPosition> opEndPoints = (HashSet<ChessPosition>) getPossibleMoves(simulate, opColor);
+                if (opEndPoints.contains(move.getEndPosition())) {
+                    illegalMoves.add(move);
                 }
             }
+            myMoves.removeAll(illegalMoves);
             return myMoves;
         }
         HashSet<ChessMove> illegalMoves = new HashSet<>();
@@ -144,8 +151,13 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if(isInCheck(teamColor)){
+            System.out.println("king in Check");
             System.out.println(squares.toString());
-            if(getValidMoves(teamColor,squares).isEmpty()){
+            HashSet<ChessMove> possibleOuts = (HashSet<ChessMove>) getValidMoves(teamColor);
+            System.out.println(possibleOuts.toString());
+            if(possibleOuts.isEmpty()){
+                System.out.println("Game over");
+                System.out.println(getValidMoves(teamColor).toString());
                 return true;
             }
         }
@@ -165,7 +177,7 @@ public class ChessGame {
         if(isInCheck(teamColor)){
             return false;
         }
-        if(getValidMoves(teamColor,squares).isEmpty()){
+        if(getValidMoves(teamColor).isEmpty()){
             return true;
         }
 
@@ -206,7 +218,7 @@ public class ChessGame {
 
             }
         }
-        return null;
+        throw new IllegalStateException("King not found");
     }
     //quick check to see if that square is empty
     public boolean isEmpty(ChessBoard board, ChessPosition pos){
@@ -238,13 +250,13 @@ public class ChessGame {
         return endPositions;
     }
 
-    public Collection<ChessMove> getValidMoves(TeamColor color, ChessBoard board){
+    public Collection<ChessMove> getValidMoves(TeamColor color){
         HashSet<ChessMove> validMoveSet = new HashSet<>();
         for (int i = 1; i < 9; i++){
             for(int j = 1; j< 9; j++){
                 ChessPosition current = new ChessPosition(i,j);
-                if(!isEmpty(board, current)){
-                    ChessPiece piece = board.getPiece(current);
+                if(!isEmpty(squares, current)){
+                    ChessPiece piece = squares.getPiece(current);
                     if(piece.getTeamColor() == color){
                         validMoveSet.addAll(validMoves(current));
                     }

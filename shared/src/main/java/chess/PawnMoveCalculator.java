@@ -7,13 +7,13 @@ import java.util.List;
 import static chess.ChessGame.TeamColor.WHITE;
 
 public class PawnMoveCalculator extends ChessMoveCalculator{
-    private List<ChessMove> possibleMoves;
-    private boolean unblockedF = true;
+
+
     public PawnMoveCalculator() {
-        possibleMoves = new ArrayList<>();
+
     }
 
-    private boolean addToList(ChessPosition start, ChessPosition next, ChessBoard board, ChessGame.TeamColor color){
+    private boolean addToList(List<ChessMove> possibleMoves, ChessPosition start, ChessPosition next, ChessBoard board, ChessGame.TeamColor color){
         if(positionValid(next)){
             if(next.getRow() != 1 && next.getRow() != 8 ) {
                 if (!empty(board, next)) {
@@ -39,7 +39,7 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
         return false;
     }
 
-    public void attack(ChessPosition start, ChessPosition nxt, ChessBoard board, ChessGame.TeamColor color){
+    public void attack(List<ChessMove> possibleMoves, ChessPosition start, ChessPosition nxt, ChessBoard board, ChessGame.TeamColor color){
         if(positionValid(nxt)){
             if(nxt.getRow() != 1 && nxt.getRow() != 8) {
                 if (!empty(board, nxt)) {
@@ -66,6 +66,8 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
 
     @Override
     public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition){
+        List<ChessMove> possibleMoves = new ArrayList<>();
+        boolean unblockedF = true;
         if(color ==  WHITE){
             ChessPosition attackL = new ChessPosition(startPosition.getRow() + 1,startPosition.getColumn() - 1);
             ChessPosition attackR = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
@@ -74,17 +76,17 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 for(int i = 1; i < 3; i ++){
                     ChessPosition Forward = new ChessPosition(startPosition.getRow()+ i, startPosition.getColumn());
                     if(unblockedF){
-                        unblockedF = addToList(startPosition, Forward, board,color);
+                        unblockedF = addToList(possibleMoves, startPosition, Forward, board,color);
                     }
                 }
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
+                attack(possibleMoves,startPosition,attackR,board,color);
+                attack(possibleMoves,startPosition,attackL,board,color);
 
             }else{
                 ChessPosition Forward = new ChessPosition(startPosition.getRow()+ 1, startPosition.getColumn());
-                unblockedF = addToList(startPosition, Forward, board,color);
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
+                unblockedF = addToList(possibleMoves,startPosition, Forward, board,color);
+                attack(possibleMoves,startPosition,attackR,board,color);
+                attack(possibleMoves,startPosition,attackL,board,color);
 
 
             }
@@ -97,19 +99,19 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 for(int i = 1; i < 3; i++) {
                     ChessPosition Forward = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
                     if (unblockedF) {
-                        unblockedF = addToList(startPosition, Forward, board, color);
+                        unblockedF = addToList(possibleMoves, startPosition, Forward, board, color);
                     }
                 }
 
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
+                attack(possibleMoves,startPosition,attackR,board,color);
+                attack(possibleMoves,startPosition,attackL,board,color);
 
             }else{
                 ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-                unblockedF = addToList(startPosition, Forward, board, color);
+                unblockedF = addToList(possibleMoves,startPosition, Forward, board, color);
 
-                attack(startPosition,attackR,board,color);
-                attack(startPosition,attackL,board,color);
+                attack(possibleMoves,startPosition,attackR,board,color);
+                attack(possibleMoves,startPosition,attackL,board,color);
 
             }
         }

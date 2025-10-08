@@ -7,7 +7,7 @@ import java.util.List;
 public class QueenMoveCalculator extends ChessMoveCalculator {
 
     public QueenMoveCalculator() {
-        // No need to initialize anything here anymore
+
     }
 
     private boolean addToList(List<ChessMove> possibleMoves, ChessPosition start, ChessPosition next, ChessBoard board, ChessGame.TeamColor color){

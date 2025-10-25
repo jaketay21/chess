@@ -2,7 +2,7 @@ package models;
 
 import java.util.HashMap;
 
-public class AuthMap extends HashMap<String, Authtoken> {
+public class AuthMap extends HashMap<String, String > {
 
 
 

@@ -17,4 +17,9 @@ public class MemUserDAO implements UserDAOInterface {
     public void addUser(UserData user){
         users.put(user.username(),user);
     }
+
+    public String getPassword(String username){
+        UserData user =  users.get(username);
+        return user.password();
+    }
 }

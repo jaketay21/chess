@@ -2,6 +2,7 @@ package handlers;
 
 
 import models.Authtoken;
+import request.LoginRequest;
 import request.RegisterRequest;
 import response.RegisterResponse;
 import service.AuthService;
@@ -13,11 +14,11 @@ import java.util.Map;
 
 public class UserHandler extends BaseHandler{
     private final UserService userService;
-    private final AuthService authService;
 
     public UserHandler(UserService userService, AuthService authService){
+        super(authService);
         this.userService = userService;
-        this.authService = authService;
+
     }
 
     public void Register(Context ctx){
@@ -26,7 +27,7 @@ public class UserHandler extends BaseHandler{
 
             if (!userService.contains(request.username())) {
                 // create auth token and add token to db
-                Authtoken token = authService.addAuth(request);
+                Authtoken token = authService.addAuth(request.username());
                 userService.addUser(request);
 
                 // return auth token as JSON
@@ -41,7 +42,31 @@ public class UserHandler extends BaseHandler{
             ctx.status(400); // internal server error
             ctx.result("{\"message\": \"Error: " + e.getMessage() + "\"}");
         }
+
     }
+
+    public void Login(Context ctx){
+        try{
+            LoginRequest request = fromJson(ctx.body(), LoginRequest.class);
+            if(userService.contains(request.usernaame())){
+                if(userService.matchesPassword(request)) {
+                    Authtoken token = authService.addAuth(request.usernaame());
+                    ctx.status(200);
+                    ctx.result(toJson(token));
+                }
+            }else{
+                ctx.status(400); // internal server error
+                ctx.result("{\"message\": \"Error: " + e.getMessage() + "\"}");
+            }
+
+        }catch (Exception e){
+            ctx.status(400); // internal server error
+            ctx.result("{\"message\": \"Error: " + e.getMessage() + "\"}");
+        }
+    }
+
+
+
 
 
 

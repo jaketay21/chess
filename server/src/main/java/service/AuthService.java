@@ -17,10 +17,14 @@ public class AuthService {
         return UUID.randomUUID().toString();
     }
 
-    public Authtoken addAuth(RegisterRequest request){
+    public Authtoken addAuth(String username){
         String authToken = generateToken();
-        Authtoken token = AuthDao.addAuths(request.username(),authToken);
+        Authtoken token = AuthDao.addAuths(username,authToken);
         return token;
+    }
+
+    public boolean isAuthorized(String token){
+        return AuthDao.contains(token);
     }
 
 }

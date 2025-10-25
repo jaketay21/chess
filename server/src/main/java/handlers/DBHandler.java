@@ -6,6 +6,7 @@ import io.javalin.http.Context;
 public class DBHandler {
     private final DBService dbService;
 
+
     public DBHandler(DBService dbService){
         this.dbService = dbService;
     }

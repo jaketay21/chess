@@ -4,8 +4,11 @@ import dataaccess.MemAuthDAO;
 import dataaccess.MemGameDAO;
 import dataaccess.MemUserDAO;
 import handlers.DBHandler;
+import handlers.UserHandler;
 import io.javalin.*;
+import service.AuthService;
 import service.DBService;
+import service.UserService;
 
 
 public class Server {
@@ -19,10 +22,14 @@ public class Server {
         var authDAO = new MemAuthDAO();
 
         var dbService = new DBService(userDAO, gameDAO, authDAO);
+        var userService = new UserService(userDAO);
+        var authService = new AuthService(authDAO);
         var dbHandler = new DBHandler(dbService);
+        var userHandler = new UserHandler(userService, authService);
+
 
         javalin.delete("/db", dbHandler::handleClearAll);
-
+        javalin.post("/user", userHandler::Register);
 
 
 

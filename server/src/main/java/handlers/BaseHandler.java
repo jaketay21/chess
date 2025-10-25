@@ -2,7 +2,6 @@ package handlers;
 
 import com.google.gson.Gson;
 
-
 public abstract class BaseHandler {
     protected final Gson gson = new Gson();
 

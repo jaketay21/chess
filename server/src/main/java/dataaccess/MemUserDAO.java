@@ -1,5 +1,6 @@
 package dataaccess;
 
+import models.UserData;
 import models.UserMap;
 
 public class MemUserDAO implements UserDAOInterface {
@@ -11,5 +12,9 @@ public class MemUserDAO implements UserDAOInterface {
 
     public boolean contains(String username){
         return users.containsKey(username);
+    }
+
+    public void addUser(UserData user){
+        users.put(user.username(),user);
     }
 }

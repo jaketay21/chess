@@ -1,9 +1,9 @@
-package Dataaccess;
+package dataaccess;
 
-import Models.UserList;
+import models.UserMap;
 
 public class MemUserDAO implements UserDAOInterface {
-    private static UserList users = new UserList();
+    private static UserMap users = new UserMap();
 
     public void clearUsers(){
         users.clear();

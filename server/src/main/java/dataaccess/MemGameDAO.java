@@ -1,9 +1,9 @@
-package Dataaccess;
+package dataaccess;
 
-import Models.GameList;
+import models.GameMap;
 
 public class MemGameDAO implements GameDAOInterface{
-    private static GameList games = new GameList();
+    private static GameMap games = new GameMap();
 
     public void clearGames(){
         games.clear();

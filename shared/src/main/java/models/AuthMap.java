@@ -1,9 +1,9 @@
-package Models;
+package models;
 
 import java.util.HashMap;
 
-public class AuthList extends HashMap<String, Authtoken> {
-    public AuthList(){
+public class AuthMap extends HashMap<String, Authtoken> {
+    public AuthMap(){
         super();
     }
 

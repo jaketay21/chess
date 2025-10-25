@@ -1,9 +1,9 @@
-package Models;
+package models;
 
 import java.util.HashMap;
 
-public class GameList extends HashMap<Integer, Game> {
-    public GameList(){
+public class GameMap extends HashMap<Integer, GameData> {
+    public GameMap(){
         super();
     }
 

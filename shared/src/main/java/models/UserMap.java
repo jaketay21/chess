@@ -1,9 +1,9 @@
-package Models;
+package models;
 
 import java.util.HashMap;
 
-public class UserList extends HashMap<String, User> {
-    public UserList(){
+public class UserMap extends HashMap<String, UserData> {
+    public UserMap(){
         super();
     }
 

@@ -8,4 +8,8 @@ public class MemUserDAO implements UserDAOInterface {
     public void clearUsers(){
         users.clear();
     }
+
+    public boolean contains(String username){
+        return users.containsKey(username);
+    }
 }

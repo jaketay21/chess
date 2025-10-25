@@ -1,4 +1,16 @@
 package handlers;
 
-public class UserHandler {
+
+import service.UserService;
+
+public class UserHandler extends BaseHandler{
+    private final UserService userService;
+
+    public UserHandler(UserService userService){
+        this.userService = userService;
+    }
+
+
+
+
 }

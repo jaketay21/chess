@@ -1,4 +1,5 @@
 package Dataaccess;
 
-public class MemAuthDao {
+public class MemAuthDao implements BaseDAO  {
+
 }

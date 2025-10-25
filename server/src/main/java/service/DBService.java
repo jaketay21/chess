@@ -19,8 +19,9 @@ public class DBService {
      * Clears all data from all DAOs
      */
     public void clearAll() {
-        userDao.clearUsers();
-        gameDao.clearGames();
-        authDao.clearAuths();
+           userDao.clearUsers();
+           gameDao.clearGames();
+           authDao.clearAuths();
+
     }
 }

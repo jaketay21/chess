@@ -8,12 +8,10 @@ import com.google.gson.Gson;
 
 public abstract class BaseHandler {
 
-    protected final AuthService authService;
+
     protected final Gson gson = new Gson();
 
-    public BaseHandler(AuthService authService) {
-        this.authService = authService;
-    }
+    public BaseHandler() {}
 
     protected <T> T fromJson(String json, Class<T> clas) {
         return gson.fromJson(json, clas);
@@ -23,7 +21,5 @@ public abstract class BaseHandler {
         return gson.toJson(obj);
     }
 
-    protected boolean authorized(String authToken){
-        return authService.isAuthorized(authToken);
-    }
+
 }

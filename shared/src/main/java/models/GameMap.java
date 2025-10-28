@@ -10,4 +10,5 @@ public class GameMap extends HashMap<Integer, GameData> {
     public void clearGames(){
         super.clear();
     }
+
 }

@@ -4,24 +4,17 @@ package handlers;
 import models.Authtoken;
 import request.LoginRequest;
 import request.RegisterRequest;
-import response.RegisterResponse;
 import service.AuthService;
-import service.RegisterService;
-import service.UserService;
 import io.javalin.http.Context;
-
-import java.util.Map;
+import service.UserService;
 
 
 public class UserHandler extends BaseHandler{
     private final UserService userService;
-    private final RegisterService registerService;
 
-    public UserHandler(UserService userService, AuthService authService, RegisterService registerService){
+    public UserHandler(UserService userService, AuthService authService){
         super(authService);
         this.userService = userService;
-        this.registerService = registerService;
-
     }
 
     public void Register(Context ctx){
@@ -29,7 +22,7 @@ public class UserHandler extends BaseHandler{
             RegisterRequest request = fromJson(ctx.body(), RegisterRequest.class);
 
             try {
-                Authtoken token = registerService.registerUser(request);
+                Authtoken token = userService.registerUser(request);
                 ctx.status(200);
                 ctx.result(toJson(token));
 
@@ -44,34 +37,34 @@ public class UserHandler extends BaseHandler{
 
     }
 
-    public void Login(Context ctx){
+    public void Login(Context ctx)throws RuntimeException{
+        LoginRequest request = fromJson(ctx.body(), LoginRequest.class);
         try{
-            LoginRequest request = fromJson(ctx.body(), LoginRequest.class);
-            if(userService.contains(request.usernaame())){
-                if(userService.matchesPassword(request)) {
-                    Authtoken token = authService.addAuth(request.usernaame());
-                    ctx.status(200);
-                    ctx.result(toJson(token));
-                }
-            }else{
-                ctx.status(400); // internal server error
-                ctx.result("{\"message\": \"Error: " + "\"}");
-            }
-
-        }catch (Exception e){
-            ctx.status(400); // internal server error
-            ctx.result("{\"message\": \"Error: " + e.getMessage() + "\"}");
+            Authtoken token = userService.login(request);
+            ctx.status(200);
+            ctx.result(toJson(token));
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
+
+
     }
 
-  /*  public void Logout(Context ctx){
+    public void Logout(Context ctx) throws RuntimeException{
+
         try{
             String token = ctx.header("authorization");
-            if(authService.isAuthorized(token)){
-
-            }
+            userService.logout(token);
+            ctx.json("{}");
+            ctx.status(200);
+        }catch (RuntimeException e){
+            ctx.status(400);
         }
-    }*/
+
+
+    }
+
+
 
 
 

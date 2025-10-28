@@ -27,4 +27,8 @@ public class AuthService {
         return AuthDao.contains(token);
     }
 
+    public void deleteToken(String token){
+        AuthDao.deleteAuth(token);
+    }
+
 }

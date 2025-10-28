@@ -3,6 +3,8 @@ package dataaccess;
 import models.AuthMap;
 import models.Authtoken;
 
+import java.util.Objects;
+
 public class MemAuthDAO implements AuthDAOInterface {
     private static AuthMap Auths = new AuthMap();
 
@@ -14,7 +16,11 @@ public class MemAuthDAO implements AuthDAOInterface {
     public void clearAuths(){
         Auths.clear();
     }
+    public void deleteAuth(String token){
 
+        Auths.entrySet().removeIf(entry -> Objects.equals(entry.getValue(), token));
+
+    }
     public boolean contains(String token){
         return Auths.containsValue(token);
     }

@@ -31,4 +31,8 @@ public class AuthService {
         AuthDao.deleteAuth(token);
     }
 
+    public String getKey(String token){
+       return AuthDao.getKey(token);
+    }
+
 }

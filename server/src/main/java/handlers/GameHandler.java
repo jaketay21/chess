@@ -57,7 +57,8 @@ public class GameHandler extends BaseHandler {
 
             gameService.joinGame(clientToken, request);
             ctx.status(200);
-            ctx.result("{}"); // ✅ correct empty object
+            ctx.result(toJson(Map.of()));
+
 
         } catch (ResponseException e) {
             ctx.status(e.getCode());

@@ -51,6 +51,10 @@ public class GameService {
         GameData foundGame;
         try {
             foundGame = gameDao.getGame(request.gameID());
+            if (foundGame == null) {
+                throw new ResponseException(400); // invalid gameID
+            }
+
         } catch (RuntimeException e) {
             throw new ResponseException(400); // gameID invalid
         }

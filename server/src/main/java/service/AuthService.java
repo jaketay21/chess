@@ -13,26 +13,38 @@ public class AuthService {
         this.authDao = authDao;
     }
 
-    public static String generateToken() throws ResponseException {
+    private String generateToken() throws ResponseException {
         return UUID.randomUUID().toString();
     }
 
     public Authtoken addAuth(String username)throws ResponseException{
+        if(username == null || username.isBlank()){
+            throw new ResponseException(400);
+        }
         String authToken = generateToken();
         Authtoken token = authDao.addAuth(authToken,username);
         return token;
     }
 
     public boolean isAuthorized(String token)throws ResponseException{
+        if(token == null || token.isBlank()){
+            throw new ResponseException(400);
+        }
         return authDao.contains(token);
     }
 
     public void deleteToken(String token)throws ResponseException{
+        if(token == null || token.isBlank()){
+            throw new ResponseException(400);
+        }
         authDao.deleteAuth(token);
     }
 
     public String getKey(String token)throws ResponseException {
-       return authDao.getKey(token);
+        if(token == null || token.isBlank()){
+            throw new ResponseException(400);
+        }
+        return authDao.getKey(token);
     }
 
 }

@@ -145,52 +145,53 @@ class ServiceTest {
     //---------
 
     @Test
-    void generateTokenPositive() throws ResponseException{
-
-    }
-
-    @Test
-    void generateTokenNegative() throws ResponseException{
-
-    }
-
-    @Test
     void addAuthPositive() throws ResponseException{
-
+        Authtoken token = authService.addAuth("test1");
+        String actual = authDao.getKey(token.authToken());
+        assertEquals("test1", actual);
     }
 
     @Test
     void addAuthNegative() throws ResponseException{
-
+        assertThrows(ResponseException.class, () -> authService.addAuth(""));
     }
 
     @Test
     void deleteTokenPositive() throws ResponseException{
+        authDao.addAuth("lol","jake");
+        authService.deleteToken("lol");
+        assertFalse(authDao.contains("lol"));
 
     }
 
     @Test
     void deleteTokenNegative() throws ResponseException{
-
+        assertThrows(ResponseException.class, () -> authService.deleteToken(""));
     }
 
     @Test
     void getKeyPositive() throws ResponseException{
-
+        authDao.addAuth("lol","jake");
+        String actual = authService.getKey("lol");
+        assertEquals("jake",actual);
     }
 
     @Test
     void getKeyNegative() throws ResponseException{
+        assertThrows(ResponseException.class, () -> authService.getKey(""));
 
     }
 
     @Test
     void isAuthorizedPositive() throws ResponseException{
-
+        authDao.addAuth("lol","jake");
+        assertTrue(authService.isAuthorized("lol"));
     }
 
     @Test
     void isAuthorizedNegative() throws ResponseException{
+        assertThrows(ResponseException.class, () -> authService.isAuthorized(""));
+
 
     }
 }

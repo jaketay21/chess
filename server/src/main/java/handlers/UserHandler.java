@@ -23,7 +23,7 @@ public class UserHandler extends BaseHandler{
 
     public void Register(Context ctx)throws ResponseException{
 
-            RegisterRequest request = fromJson(ctx.body(), RegisterRequest.class);
+            RegisterRequest request;
             try {
                 request = fromJson(ctx.body(), RegisterRequest.class);
             } catch (Exception e) {
@@ -35,12 +35,10 @@ public class UserHandler extends BaseHandler{
                 ctx.status(200);
                 ctx.result(toJson(token));
 
-            } catch (RuntimeException e ){
-                ctx.status(403); // 403: already taken (for "username already exists")
-                ctx.result("{String}");
-            } catch (Exception e) {
-                ctx.status(400); // internal server error
-                ctx.result("{\"message\": \"Error: " + e.getMessage() + "\"}");
+            } catch (ResponseException e ){
+                ctx.status(e.getCode());
+                ctx.result(toJson(Map.of("message", e.getMessage())));
+
             }
 
 

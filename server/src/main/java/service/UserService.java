@@ -18,18 +18,26 @@ public class UserService {
         this.authService = authService;
     }
 
-    public Authtoken registerUser(RegisterRequest request)throws ResponseException {
-        if(!userDao.contains(request.username())){
-            Authtoken token = authService.addAuth(request.username());
-            UserData user = new UserData(request.username(), request.password(), request.email());
-            userDao.addUser(user);
-            return token;
-
-        }else{
-            throw new ResponseException(403);
+    public Authtoken registerUser(RegisterRequest request) throws ResponseException {
+        // Validate request fields (bad request)
+        if (request == null ||
+                request.username() == null || request.username().isBlank() ||
+                request.password() == null || request.password().isBlank() ||
+                request.email() == null || request.email().isBlank()) {
+            throw new ResponseException(400); // Error: bad request
         }
 
+        // Check for duplicate username (forbidden)
+        if (userDao.contains(request.username())) {
+            throw new ResponseException(403); // Error: already taken
+        }
 
+        // Create user and token
+        UserData user = new UserData(request.username(), request.password(), request.email());
+        userDao.addUser(user);
+        Authtoken token = authService.addAuth(request.username());
+
+        return token;
     }
 
     public Authtoken login(LoginRequest request)throws ResponseException {

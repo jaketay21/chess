@@ -20,7 +20,7 @@ public class AuthService {
 
     public Authtoken addAuth(String username)throws ResponseException{
         String authToken = generateToken();
-        Authtoken token = AuthDao.addAuth(username,authToken);
+        Authtoken token = AuthDao.addAuth(authToken,username);
         return token;
     }
 

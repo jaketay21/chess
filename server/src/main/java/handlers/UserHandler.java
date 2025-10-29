@@ -46,14 +46,14 @@ public class UserHandler extends BaseHandler {
             try {
                 request = fromJson(ctx.body(), LoginRequest.class);
             } catch (Exception e) {
-                throw new ResponseException(400); // invalid JSON → 400
+                throw new ResponseException(400); // bad request, not 401
             }
 
             if (request.username() == null || request.password() == null) {
-                throw new ResponseException(400); // missing fields → 400
+                throw new ResponseException(400);
             }
 
-            Authtoken token = userService.login(request); // login throws 401 if bad username/password
+            Authtoken token = userService.login(request);
             ctx.status(200);
             ctx.result(toJson(token));
 
@@ -62,6 +62,7 @@ public class UserHandler extends BaseHandler {
             ctx.result(toJson(Map.of("message", e.getMessage())));
         }
     }
+
 
 
     public void Logout(Context ctx) {

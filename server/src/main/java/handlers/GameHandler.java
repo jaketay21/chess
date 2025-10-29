@@ -73,13 +73,17 @@ public class GameHandler extends BaseHandler {
                 throw new ResponseException(401); // Unauthorized
             }
 
+            // Get the list of games
             Collection<GameListResponse> gamelist = gameService.listGames(clientToken);
+
+            // Wrap it in an object to produce JSON like {"games": [ ... ]}
             ctx.status(200);
-            ctx.result(toJson(gamelist));
+            ctx.result(toJson(Map.of("games", gamelist)));
 
         } catch (ResponseException e) {
             ctx.status(e.getCode());
             ctx.result(toJson(Map.of("message", e.getMessage())));
         }
     }
+
 }

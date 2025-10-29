@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.MemAuthDAO;
 import models.Authtoken;
+import models.ResponseException;
 import request.RegisterRequest;
 
 import java.util.UUID;
@@ -17,21 +18,21 @@ public class AuthService {
         return UUID.randomUUID().toString();
     }
 
-    public Authtoken addAuth(String username){
+    public Authtoken addAuth(String username)throws ResponseException{
         String authToken = generateToken();
         Authtoken token = AuthDao.addAuths(username,authToken);
         return token;
     }
 
-    public boolean isAuthorized(String token){
+    public boolean isAuthorized(String token)throws ResponseException{
         return AuthDao.contains(token);
     }
 
-    public void deleteToken(String token){
+    public void deleteToken(String token)throws ResponseException{
         AuthDao.deleteAuth(token);
     }
 
-    public String getKey(String token){
+    public String getKey(String token)throws ResponseException {
        return AuthDao.getKey(token);
     }
 

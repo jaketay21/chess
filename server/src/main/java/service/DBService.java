@@ -3,6 +3,7 @@ package service;
 import dataaccess.MemAuthDAO;
 import dataaccess.MemGameDAO;
 import dataaccess.MemUserDAO;
+import models.ResponseException;
 
 public class DBService {
     private final MemUserDAO userDao;
@@ -18,7 +19,7 @@ public class DBService {
     /**
      * Clears all data from all DAOs
      */
-    public void clearAll() {
+    public void clearAll() throws ResponseException {
            userDao.clearUsers();
            gameDao.clearGames();
            authDao.clearAuths();

@@ -1,9 +1,12 @@
 package handlers;
 
+import models.ResponseException;
 import service.DBService;
 import io.javalin.http.Context;
 
-public class DBHandler {
+import java.util.Map;
+
+public class DBHandler extends BaseHandler{
     private final DBService dbService;
 
 
@@ -11,9 +14,14 @@ public class DBHandler {
         this.dbService = dbService;
     }
 
-    public void handleClearAll(Context ctx){
-        dbService.clearAll();
-        ctx.json("{}");
-        ctx.status(200);
+    public void handleClearAll(Context ctx)throws ResponseException {
+        try {
+            dbService.clearAll();
+            ctx.json("{}");
+            ctx.status(200);
+        }catch (ResponseException e){
+            ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message", e.getMessage())));
+        }
     }
 }

@@ -227,33 +227,43 @@ public class ChessGame {
     }
     //quick check to see if that square is empty
     public boolean isEmpty(ChessBoard board, ChessPosition pos){
-        if(board.getPiece(pos) == null) return true;
+        if (board.getPiece(pos) == null) {
+            return true;
+        }
         return false;
     }
 
-    public Collection<ChessPosition> getPossibleMoves( ChessBoard board, TeamColor teamColor){
-        HashSet<ChessMove> possiblemMoves = new HashSet<>();
-        HashSet<ChessPosition> endPositions = new HashSet<>();
-        for(int i = 1; i < 9; i++){
-            for(int j = 1; j < 9; j++){
-                ChessPosition current = new ChessPosition(i,j);
-                if(!isEmpty(board,current)){
-                    ChessPiece piece = board.getPiece(current);
-                    if(piece.getTeamColor() == teamColor){
-                        for(ChessMove move: piece.pieceMoves(board,current)){
-                            possiblemMoves.add(move);
-                        }
-                    }
+    public Collection<ChessPosition> getPossibleMoves(ChessBoard board, TeamColor teamColor) {
+        Set<ChessMove> possibleMoves = collectMoves(board, teamColor);
+        return extractEndPositions(possibleMoves);
+    }
 
-                }
+    private Set<ChessMove> collectMoves(ChessBoard board, TeamColor teamColor) {
+        Set<ChessMove> moves = new HashSet<>();
+
+        for (int row = 1; row <= 8; row++) {
+            for (int col = 1; col <= 8; col++) {
+                ChessPosition position = new ChessPosition(row, col);
+                if (isEmpty(board, position)) continue; // ✅ guard clause removes nesting
+
+                ChessPiece piece = board.getPiece(position);
+                if (piece.getTeamColor() != teamColor) continue; // ✅ guard clause again
+
+                moves.addAll(piece.pieceMoves(board, position));
             }
         }
-        for(ChessMove move: possiblemMoves){
-            endPositions.add(move.getEndPosition());
-        }
 
-        return endPositions;
+        return moves;
     }
+
+    private Set<ChessPosition> extractEndPositions(Set<ChessMove> moves) {
+        Set<ChessPosition> positions = new HashSet<>();
+        for (ChessMove move : moves) {
+            positions.add(move.getEndPosition());
+        }
+        return positions;
+    }
+
 
     public Collection<ChessMove> getValidMoves(TeamColor color){
         HashSet<ChessMove> validMoveSet = new HashSet<>();

@@ -16,7 +16,7 @@ public class UserHandler extends BaseHandler {
         this.userService = userService;
     }
 
-    public void Register(Context ctx) {
+    public void register(Context ctx) {
         try {
             RegisterRequest request;
             try {
@@ -40,7 +40,7 @@ public class UserHandler extends BaseHandler {
         }
     }
 
-    public void Login(Context ctx) {
+    public void login(Context ctx) {
         try {
             LoginRequest request;
             try {
@@ -65,7 +65,7 @@ public class UserHandler extends BaseHandler {
 
 
 
-    public void Logout(Context ctx) {
+    public void logout(Context ctx) {
         try {
             String token = ctx.header("authorization");
             if (token == null || token.isBlank()) {

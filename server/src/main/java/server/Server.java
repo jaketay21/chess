@@ -7,7 +7,6 @@ import handlers.DBHandler;
 import handlers.GameHandler;
 import handlers.UserHandler;
 import io.javalin.*;
-import org.eclipse.jetty.util.log.Log;
 import service.*;
 
 
@@ -31,9 +30,9 @@ public class Server {
 
 
         javalin.delete("/db", dbHandler::handleClearAll);
-        javalin.post("/user", userHandler::Register);
-        javalin.post("/session", userHandler::Login);
-        javalin.delete("/session", userHandler::Logout);
+        javalin.post("/user", userHandler::register);
+        javalin.post("/session", userHandler::login);
+        javalin.delete("/session", userHandler::logout);
         javalin.post("/game", gameHandler::createGame);
         javalin.put("/game", gameHandler::joinGame);
         javalin.get("/game", gameHandler::listGames);

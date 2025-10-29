@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class ChessMoveCalculator {
 
@@ -11,7 +9,8 @@ public class ChessMoveCalculator {
     public ChessMoveCalculator() {
     }
 
-   public Collection<ChessMove> CalculateMove (ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition){
+   public Collection<ChessMove> calculateMove(ChessBoard board, ChessGame.TeamColor color,
+                                              ChessPiece.PieceType promotionType, ChessPosition startPosition){
        return null;
    }
 
@@ -21,7 +20,9 @@ public class ChessMoveCalculator {
    }
 
     public boolean empty(ChessBoard board, ChessPosition position){
-        if(board.getPiece(position) != null) return false;
+        if(board.getPiece(position) != null){
+            return false;
+        }
         return true;
     }
 }

@@ -22,7 +22,8 @@ public class BishopMoveCalculator extends ChessMoveCalculator {
         return false;
     }
     @Override
-    public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition) {
+    public Collection<ChessMove> calculateMove(ChessBoard board, ChessGame.TeamColor color,
+                                               ChessPiece.PieceType promotionType, ChessPosition startPosition) {
         List<ChessMove> possibleMoves = new ArrayList<>();
         boolean unblockedUpR= true;
         boolean unblockedUpL = true;

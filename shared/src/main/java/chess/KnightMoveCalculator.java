@@ -24,7 +24,8 @@ public class KnightMoveCalculator extends ChessMoveCalculator{
     }
 
     @Override
-    public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition){
+    public Collection<ChessMove> calculateMove(ChessBoard board, ChessGame.TeamColor color,
+                                               ChessPiece.PieceType promotionType, ChessPosition startPosition){
         List<ChessMove> possibleMoves = new ArrayList<>();
         ChessPosition upR = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn() + 1);
         ChessPosition upL = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn() - 1);

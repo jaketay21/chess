@@ -3,15 +3,14 @@ package service;
 import dataaccess.MemAuthDAO;
 import models.Authtoken;
 import models.ResponseException;
-import request.RegisterRequest;
 
 import java.util.UUID;
 
 public class AuthService {
-    private final MemAuthDAO AuthDao;
+    private final MemAuthDAO authDao;
 
-    public AuthService(MemAuthDAO AuthDao){
-        this.AuthDao = AuthDao;
+    public AuthService(MemAuthDAO authDao){
+        this.authDao = authDao;
     }
 
     public static String generateToken() {
@@ -20,20 +19,20 @@ public class AuthService {
 
     public Authtoken addAuth(String username)throws ResponseException{
         String authToken = generateToken();
-        Authtoken token = AuthDao.addAuth(authToken,username);
+        Authtoken token = authDao.addAuth(authToken,username);
         return token;
     }
 
     public boolean isAuthorized(String token)throws ResponseException{
-        return AuthDao.contains(token);
+        return authDao.contains(token);
     }
 
     public void deleteToken(String token)throws ResponseException{
-        AuthDao.deleteAuth(token);
+        authDao.deleteAuth(token);
     }
 
     public String getKey(String token)throws ResponseException {
-       return AuthDao.getKey(token);
+       return authDao.getKey(token);
     }
 
 }

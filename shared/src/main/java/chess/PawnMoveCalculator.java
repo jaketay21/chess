@@ -65,7 +65,8 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
     }
 
     @Override
-    public Collection<ChessMove> CalculateMove(ChessBoard board, ChessGame.TeamColor color, ChessPiece.PieceType promotionType, ChessPosition startPosition){
+    public Collection<ChessMove> calculateMove(ChessBoard board, ChessGame.TeamColor color,
+                                               ChessPiece.PieceType promotionType, ChessPosition startPosition){
         List<ChessMove> possibleMoves = new ArrayList<>();
         boolean unblockedF = true;
         if(color ==  WHITE){
@@ -74,9 +75,9 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
 
             if(startPosition.getRow() == 2){
                 for(int i = 1; i < 3; i ++){
-                    ChessPosition Forward = new ChessPosition(startPosition.getRow()+ i, startPosition.getColumn());
+                    ChessPosition forward = new ChessPosition(startPosition.getRow()+ i, startPosition.getColumn());
                     if(unblockedF){
-                        unblockedF = addToList(possibleMoves, startPosition, Forward, board,color);
+                        unblockedF = addToList(possibleMoves, startPosition, forward, board,color);
                     }
                 }
                 attack(possibleMoves,startPosition,attackR,board,color);
@@ -97,9 +98,9 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
 
             if(startPosition.getRow() == 7){
                 for(int i = 1; i < 3; i++) {
-                    ChessPosition Forward = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
+                    ChessPosition forward = new ChessPosition(startPosition.getRow() - i, startPosition.getColumn());
                     if (unblockedF) {
-                        unblockedF = addToList(possibleMoves, startPosition, Forward, board, color);
+                        unblockedF = addToList(possibleMoves, startPosition, forward, board, color);
                     }
                 }
 
@@ -107,8 +108,8 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 attack(possibleMoves,startPosition,attackL,board,color);
 
             }else{
-                ChessPosition Forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
-                unblockedF = addToList(possibleMoves,startPosition, Forward, board, color);
+                ChessPosition forward = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
+                unblockedF = addToList(possibleMoves,startPosition, forward, board, color);
 
                 attack(possibleMoves,startPosition,attackR,board,color);
                 attack(possibleMoves,startPosition,attackL,board,color);

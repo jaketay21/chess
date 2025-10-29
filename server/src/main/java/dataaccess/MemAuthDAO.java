@@ -6,9 +6,9 @@ import models.Authtoken;
 public class MemAuthDAO implements AuthDAOInterface {
     private final AuthMap auths = new AuthMap();
 
-    public Authtoken addAuth(String username, String token) {
+    public Authtoken addAuth(String token, String username) {
         auths.put(token, username);
-        return new Authtoken(username, token);
+        return new Authtoken(token, username);
     }
 
     public void clearAuths() {

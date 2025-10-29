@@ -1,8 +1,10 @@
 package handlers;
 
+import models.ResponseException;
 import io.javalin.http.Context;
 
 import models.GameData;
+import models.ResponseException;
 import request.CreateGameRequest;
 import request.JoinRequest;
 
@@ -12,6 +14,7 @@ import service.GameService;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameHandler extends BaseHandler {
     private final GameService gameService;
@@ -41,19 +44,21 @@ public class GameHandler extends BaseHandler {
             JoinRequest request = fromJson(ctx.body(),JoinRequest.class);
             gameService.joinGame(clientToken,request);
 
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        } catch (models.ResponseException e) {
+            ctx.status(e.getCode());
         }
     }
 
-    public void listGames(Context ctx){
-        String clientToken = ctx.header("authorization");
+    public void listGames(Context ctx)throws models.ResponseException {
         try{
-           Collection<GameListResponse> gamelist = gameService.listGames(clientToken);
-           ctx.status(200);
-           ctx.result(toJson(gamelist));
-        }catch (RuntimeException e){
-            throw new RuntimeException(e);
+            String clientToken = ctx.header("authorization");
+            Collection<GameListResponse> gamelist = gameService.listGames(clientToken);
+            ctx.status(200);
+            ctx.result(toJson(gamelist));
+        }catch (models.ResponseException e){
+            ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message",(e.getMessage()))));
+
         }
     }
 

@@ -6,47 +6,42 @@ import models.GameMap;
 
 import java.util.*;
 
-public class MemGameDAO implements GameDAOInterface{
-    private static GameMap games = new GameMap();
-    private static int gameNum = 1000;
+public class MemGameDAO implements GameDAOInterface {
+    private final GameMap games = new GameMap();
+    private int gameNum = 1;
 
-    public void clearGames(){
+    public void clearGames() {
         games.clear();
-        gameNum = 1000;
+        gameNum = 1;
     }
 
-
-    public int createGame(String gameName){
+    public int createGame(String gameName) {
         ChessGame game = new ChessGame();
-        int gameID = gameNum;
-        GameData newGame = new GameData(gameID,gameName,game);
+        int gameID = gameNum++;
+        GameData newGame = new GameData(gameID, gameName, game);
         games.put(gameID, newGame);
-        gameNum++;
         return gameID;
-
     }
 
-    public GameData getGame(int gameID)throws RuntimeException{
-        if(!games.containsKey(gameID)){
-            throw new RuntimeException("no game here by that name");
-        }
+    public GameData getGame(int gameID) {
         return games.get(gameID);
     }
 
-    public void replaceWhite(int gameID, String username){
+    public void replaceWhite(int gameID, String username) {
         GameData found = games.get(gameID);
-        found.setWhiteUsername(username);
+        if (found != null) {
+            found.setWhiteUsername(username);
+        }
     }
 
-    public void replaceBlack(int gameID, String username){
+    public void replaceBlack(int gameID, String username) {
         GameData found = games.get(gameID);
-        found.setBlackUsername(username);
+        if (found != null) {
+            found.setBlackUsername(username);
+        }
     }
 
-    public Collection<GameData> getGames(){
-        List<GameData> gameList = new ArrayList<>(games.values());
-        return gameList;
-
+    public Collection<GameData> getGames() {
+        return new ArrayList<>(games.values());
     }
-
 }

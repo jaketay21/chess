@@ -15,8 +15,8 @@ public  class GameData {
         this.gameID = gameID;
         this.gameName = gameName;
         this.game = game;
-        whiteUsername = "";
-        blackUsername = "";
+        whiteUsername = null;
+        blackUsername = null;
 
 
     }

@@ -10,7 +10,8 @@ public class QueenMoveCalculator extends ChessMoveCalculator {
 
     }
 
-    private boolean addToList(List<ChessMove> possibleMoves, ChessPosition startPosition, ChessPosition next, ChessBoard chessBoard, ChessGame.TeamColor color){
+    private boolean addToList(List<ChessMove> possibleMoves, ChessPosition startPosition,
+                              ChessPosition next, ChessBoard chessBoard, ChessGame.TeamColor color){
         if (positionValid(next)) {
             if (!empty(chessBoard, next)) {
                 ChessPiece blocker = chessBoard.getPiece(next);

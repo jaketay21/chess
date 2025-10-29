@@ -84,8 +84,8 @@ public class PawnMoveCalculator extends ChessMoveCalculator{
                 attack(possibleMoves,startPosition,attackL,board,color);
 
             }else{
-                ChessPosition Forward = new ChessPosition(startPosition.getRow()+ 1, startPosition.getColumn());
-                unblockedF = addToList(possibleMoves,startPosition, Forward, board,color);
+                ChessPosition forward = new ChessPosition(startPosition.getRow()+ 1, startPosition.getColumn());
+                unblockedF = addToList(possibleMoves,startPosition, forward, board,color);
                 attack(possibleMoves,startPosition,attackR,board,color);
                 attack(possibleMoves,startPosition,attackL,board,color);
 

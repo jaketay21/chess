@@ -244,10 +244,14 @@ public class ChessGame {
         for (int row = 1; row <= 8; row++) {
             for (int col = 1; col <= 8; col++) {
                 ChessPosition position = new ChessPosition(row, col);
-                if (isEmpty(board, position)) continue; // ✅ guard clause removes nesting
+                if (isEmpty(board, position)){
+                    continue; // ✅ guard clause removes nesting
+                }
 
                 ChessPiece piece = board.getPiece(position);
-                if (piece.getTeamColor() != teamColor) continue; // ✅ guard clause again
+                if (piece.getTeamColor() != teamColor){
+                    continue; // ✅ guard clause again
+                }
 
                 moves.addAll(piece.pieceMoves(board, position));
             }

@@ -9,7 +9,8 @@ public class KingMoveCalculator extends ChessMoveCalculator {
 
     public KingMoveCalculator() {}
 
-    private void addToList(List<ChessMove> allPossibleMoves, ChessPosition startPosition, ChessPosition next, ChessBoard chessBoard, ChessGame.TeamColor color){
+    private void addToList(List<ChessMove> allPossibleMoves, ChessPosition startPosition,
+                           ChessPosition next, ChessBoard chessBoard, ChessGame.TeamColor color){
         if(positionValid(next)){
             if(!empty(chessBoard,next)){
                 ChessPiece blocker = chessBoard.getPiece(next);

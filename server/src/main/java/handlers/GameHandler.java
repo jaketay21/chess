@@ -26,26 +26,41 @@ public class GameHandler extends BaseHandler {
     }
 
     public void createGame(Context ctx){
-        CreateGameRequest request = fromJson(ctx.body(), CreateGameRequest.class);
-        String clientToken = ctx.header("authorization");
+
         try{
+            CreateGameRequest request = fromJson(ctx.body(), CreateGameRequest.class);
+            String clientToken = ctx.header("authorization");
            int gameID  = gameService.createGame(clientToken, request);
-            ctx.result(toJson(gameID));
+            ctx.result(toJson(Map.of("gameID",gameID)));
             ctx.status(200);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        } catch (ResponseException e) {
+            ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message",(e.getMessage()))));
         }
     }
 
-    public void joinGame(Context ctx){
-        String clientToken = ctx.header("authorization");
+    public void joinGame(Context ctx) {
+        try {
+            String clientToken = ctx.header("authorization");
+            if (clientToken == null || clientToken.isBlank()) {
+                throw new ResponseException(401); // Unauthorized
+            }
 
-        try{
-            JoinRequest request = fromJson(ctx.body(),JoinRequest.class);
-            gameService.joinGame(clientToken,request);
+            JoinRequest request;
+            try {
+                request = fromJson(ctx.body(), JoinRequest.class);
+            } catch (Exception e) {
+                throw new ResponseException(400); // Bad request
+            }
 
-        } catch (models.ResponseException e) {
+            gameService.joinGame(clientToken, request);
+
+            ctx.status(200);
+            ctx.result(toJson("{}"));
+
+        } catch (ResponseException e) {
             ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message", e.getMessage())));
         }
     }
 

@@ -3,10 +3,13 @@ package service;
 import chess.ChessGame;
 import dataaccess.MemGameDAO;
 import models.GameData;
+import models.ResponseException;
+import passoff.exception.ResponseParseException;
 import request.CreateGameRequest;
 import request.JoinRequest;
 import response.GameListResponse;
 
+import java.lang.module.ResolutionException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,9 +24,9 @@ public class GameService {
         this.authService = authService;
     }
 
-    public int createGame(String token, CreateGameRequest request)throws RuntimeException{
+    public int createGame(String token, CreateGameRequest request)throws ResponseException{
         if(!authService.isAuthorized(token)){
-            throw new RuntimeException("lol");
+            throw new ResponseException(401);
         }
 
         int gameID = gameDao.createGame(request.gameName());
@@ -31,9 +34,9 @@ public class GameService {
 
     }
 
-    public void joinGame(String token, JoinRequest request)throws RuntimeException{
+    public void joinGame(String token, JoinRequest request)throws ResponseException{
         if(!authService.isAuthorized(token)){
-            throw new RuntimeException("lol");
+            throw new ResponseException(401);
         }
         String username = authService.getKey(token);
         GameData foundGame = gameDao.getGame(request.gameID());
@@ -42,7 +45,7 @@ public class GameService {
             case "WHITE":
                 //check and for opening in White
                 if(!foundGame.getWhiteUsername().isBlank()){
-                    throw new RuntimeException("spot filled");
+                    throw new ResponseException(403);
                 }
                 gameDao.replaceWhite(foundGame.getGameID(),username);
 
@@ -50,19 +53,19 @@ public class GameService {
             case "BLACK":
                 //add black;
                 if(!foundGame.getBlackUsername().isBlank()){
-                    throw new RuntimeException("already filled");
+                    throw new ResponseException(403);
                 }
                 gameDao.replaceBlack(foundGame.getGameID(), username);
                 break;
             default:
-                throw new RuntimeException("bac input");
+                throw new ResponseException(400);
 
         }
     }
 
-    public  Collection<GameListResponse> listGames(String token)throws RuntimeException{
+    public  Collection<GameListResponse> listGames(String token)throws ResponseException {
         if(!authService.isAuthorized(token)){
-            throw new RuntimeException("lol");
+            throw new ResponseException(401);
         }
         List<GameListResponse> gameList = new ArrayList<>();
         Collection<GameData> games = gameDao.getGames();

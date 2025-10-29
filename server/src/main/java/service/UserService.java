@@ -2,7 +2,9 @@ package service;
 
 import dataaccess.MemUserDAO;
 import models.Authtoken;
+import models.ResponseException;
 import models.UserData;
+import org.eclipse.jetty.server.Response;
 import request.LoginRequest;
 import request.RegisterRequest;
 
@@ -16,7 +18,7 @@ public class UserService {
         this.authService = authService;
     }
 
-    public Authtoken registerUser(RegisterRequest request)throws RuntimeException {
+    public Authtoken registerUser(RegisterRequest request)throws ResponseException {
         if(!userDao.contains(request.username())){
             Authtoken token = authService.addAuth(request.username());
             UserData user = new UserData(request.username(), request.password(), request.email());
@@ -24,29 +26,29 @@ public class UserService {
             return token;
 
         }else{
-            throw new RuntimeException("username already in use");
+            throw new ResponseException(403);
         }
 
 
     }
 
-    public Authtoken login(LoginRequest request)throws RuntimeException{
+    public Authtoken login(LoginRequest request)throws ResponseException {
         if(userDao.contains(request.username())){
             if(request.password().equals(userDao.getPassword(request.username()))){
                 Authtoken token = authService.addAuth(request.username());
                 return token;
             }else{
-                throw new RuntimeException("Incorrect password");
+                throw new ResponseException(401);
             }
 
         }else{
-            throw new RuntimeException("No such username");
+            throw new ResponseException(400);
         }
     }
 
-    public void logout(String token)throws RuntimeException{
+    public void logout(String token)throws ResponseException {
         if(!authService.isAuthorized(token)){
-            throw new RuntimeException("lol");
+            throw new ResponseException(401);
         }
         authService.deleteToken(token);
 

@@ -2,11 +2,15 @@ package handlers;
 
 
 import models.Authtoken;
+import models.ResponseException;
+import request.JoinRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
 import service.AuthService;
 import io.javalin.http.Context;
 import service.UserService;
+
+import java.util.Map;
 
 
 public class UserHandler extends BaseHandler{
@@ -17,9 +21,14 @@ public class UserHandler extends BaseHandler{
         this.userService = userService;
     }
 
-    public void Register(Context ctx){
+    public void Register(Context ctx)throws ResponseException{
 
             RegisterRequest request = fromJson(ctx.body(), RegisterRequest.class);
+            try {
+                request = fromJson(ctx.body(), RegisterRequest.class);
+            } catch (Exception e) {
+                throw new ResponseException(400); // Bad request
+             }
 
             try {
                 Authtoken token = userService.registerUser(request);
@@ -37,28 +46,37 @@ public class UserHandler extends BaseHandler{
 
     }
 
-    public void Login(Context ctx)throws RuntimeException{
-        LoginRequest request = fromJson(ctx.body(), LoginRequest.class);
+    public void Login(Context ctx)throws ResponseException{
+
+        LoginRequest request;
+        try {
+            request = fromJson(ctx.body(), LoginRequest.class);
+        } catch (Exception e) {
+            throw new ResponseException(400); // Bad request
+        }
+
         try{
             Authtoken token = userService.login(request);
             ctx.status(200);
             ctx.result(toJson(token));
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        } catch (ResponseException e) {
+            ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message", e.getMessage())));
         }
 
 
     }
 
-    public void Logout(Context ctx) throws RuntimeException{
+    public void Logout(Context ctx) throws ResponseException {
 
         try{
             String token = ctx.header("authorization");
             userService.logout(token);
             ctx.json("{}");
             ctx.status(200);
-        }catch (RuntimeException e){
-            ctx.status(400);
+        }catch (ResponseException e){
+            ctx.status(e.getCode());
+            ctx.result(toJson(Map.of("message", e.getMessage())));
         }
 
 

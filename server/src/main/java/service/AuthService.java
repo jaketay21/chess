@@ -13,7 +13,7 @@ public class AuthService {
         this.authDao = authDao;
     }
 
-    public static String generateToken() {
+    public static String generateToken() throws ResponseException {
         return UUID.randomUUID().toString();
     }
 

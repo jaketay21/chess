@@ -4,14 +4,19 @@ import dataaccess.MemAuthDAO;
 import dataaccess.MemGameDAO;
 import dataaccess.MemUserDAO;
 import models.Authtoken;
+import models.GameData;
 import models.ResponseException;
 import models.UserData;
 import org.eclipse.jetty.util.log.Log;
 import org.junit.jupiter.api.*;
+import request.CreateGameRequest;
+import request.JoinRequest;
 import request.LoginRequest;
 import request.RegisterRequest;
+import response.GameListResponse;
 
 import java.lang.module.ResolutionException;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +35,7 @@ class ServiceTest {
             dBService.clearAll();
     }
     //----------
-    //Userservice Tests
+    //User Service Tests
     //----------
 
     @Test
@@ -80,40 +85,63 @@ class ServiceTest {
     }
 
     //---------
-    // GameSercive
+    // Game Service Tests
     //---------
+
     @Test
     void createGamePositive() throws ResponseException{
-
+        String token = "tehe";
+        authDao.addAuth(token,"test1");
+        CreateGameRequest request = new CreateGameRequest("testGame");
+        int actual = gameService.createGame(token,request);
+        assertNotNull(gameDao.getGames());
+        assertEquals(actual, 1);
     }
 
     @Test
     void createGameNegative() throws ResponseException{
-
+        String token = "tehe";
+        authDao.addAuth(token,"test1");
+        CreateGameRequest badRequest = new CreateGameRequest("");
+        assertThrows(ResponseException.class, () -> gameService.createGame(token,badRequest));
     }
 
     @Test
     void joinGamePositive() throws ResponseException{
+        String token = "tehe";
+        authDao.addAuth(token,"test1");
+        gameDao.createGame("test");
+        JoinRequest request = new JoinRequest("WHITE", 1);
+        gameService.joinGame(token,request);
+        GameData actual = gameDao.getGame(1);
+        assertEquals(actual.getWhiteUsername(),"test1");
 
     }
 
     @Test
     void joinGameNegative() throws  ResponseException{
+        JoinRequest badRequest = new JoinRequest("blue", 1);
+        assertThrows(ResponseException.class, () -> gameService.joinGame("",badRequest));
 
     }
 
     @Test
     void listGamesPositive() throws ResponseException{
-
+        String token = "tehe";
+        authDao.addAuth(token,"test1");
+        gameDao.createGame("test");
+        Collection<GameListResponse> games;
+        games = gameService.listGames(token);
+        assertNotNull(games);
     }
 
     @Test
     void listGamesNegative() throws ResponseException{
-
+        assertThrows(ResponseException.class, () -> gameService.listGames(""));
     }
 
     //---------
-    // AuthService
+    // Auth Service Tests
     //---------
 
     @Test
